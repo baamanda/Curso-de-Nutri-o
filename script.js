@@ -3,15 +3,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const nav = document.querySelector('nav ul');
     
-    menuToggle.addEventListener('click', function() {
-        nav.classList.toggle('show');
-    });
+    if (menuToggle && nav) {
+        menuToggle.addEventListener('click', function() {
+            nav.classList.toggle('show');
+        });
+    }
     
     // Fechar menu ao clicar em um link
     const navLinks = document.querySelectorAll('nav ul li a');
     navLinks.forEach(link => {
         link.addEventListener('click', function() {
-            nav.classList.remove('show');
+            if (nav) nav.classList.remove('show');
         });
     });
     
@@ -41,16 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Adicionar classe active ao header durante scroll
     window.addEventListener('scroll', function() {
         const header = document.querySelector('header');
-        if (window.scrollY > 50) {
-            header.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
-            header.style.background = 'linear-gradient(to right, var(--bege), var(--verde-claro))';
-        } else {
-            header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            header.style.background = 'linear-gradient(to right, var(--bege), var(--verde-claro))';
+        if (header) {
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+                header.style.background = 'linear-gradient(to right, var(--bege), var(--verde-claro))';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                header.style.background = 'linear-gradient(to right, var(--bege), var(--verde-claro))';
+            }
         }
     });
     
-    // Animação de revelação dos elementos ao scroll
+    // CORREÇÃO: Animação de revelação dos elementos ao scroll
     function revealOnScroll() {
         const elements = document.querySelectorAll('.diferencial-card, .info-card, .sobre-content');
         
@@ -59,16 +63,28 @@ document.addEventListener('DOMContentLoaded', function() {
             const elementVisible = 150;
             
             if (elementTop < window.innerHeight - elementVisible) {
+                // CORREÇÃO: Tornar o elemento visível com transição suave
+                element.style.opacity = '1';
+                element.style.transform = 'translateY(0)';
                 element.classList.add('active');
             }
         });
     }
     
-    // Adicionar classe inicial para animação
+    // CORREÇÃO: Inicializar elementos como invisíveis apenas se não estiverem visíveis na tela inicialmente
     document.querySelectorAll('.diferencial-card, .info-card, .sobre-content').forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        const elementTop = element.getBoundingClientRect().top;
+        
+        // Só aplicar opacidade 0 se o elemento não estiver visível na tela inicialmente
+        if (elementTop > window.innerHeight) {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        } else {
+            // Se já estiver visível, garantir que fique visível
+            element.style.opacity = '1';
+            element.style.transform = 'translateY(0)';
+        }
     });
     
     window.addEventListener('scroll', revealOnScroll);
@@ -79,8 +95,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const galleryItems = document.querySelectorAll('.gallery-item');
     galleryItems.forEach(item => {
         item.addEventListener('click', function() {
-            const imgSrc = this.querySelector('img').src;
-            const altText = this.querySelector('img').alt;
+            const img = this.querySelector('img');
+            if (!img) return;
+            
+            const imgSrc = img.src;
+            const altText = img.alt;
             
             // Criar modal
             const modal = document.createElement('div');
@@ -114,4 +133,4 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-});o
+});
