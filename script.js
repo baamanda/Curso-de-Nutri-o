@@ -133,4 +133,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    // Efeito adicional para melhor experiência de hover
+    const hoverElements = document.querySelectorAll('.diferencial-card, .info-card, .gallery-item');
+    hoverElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        });
+        
+        element.addEventListener('mouseleave', function() {
+            this.style.transition = 'all 0.5s ease';
+        });
+    });
 });
